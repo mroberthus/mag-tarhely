@@ -21,15 +21,17 @@ document.getElementById('adForm').addEventListener('submit', function(event) {
 
 // Hirdetés adatainak beküldése a Google Sheets-be
 function submitAdToGoogleSheets(adData) {
-    const url = 'https://script.google.com/macros/s/AKfycbzrDfJhTAzGoUSwtkrOXTWbfZp8uCcHOpRdwvIjI29TGl0l6NpooaQV0XB6TDC18LrX/exec';
+    const url = 'https://script.google.com/macros/s/AKfycbySqB_kDbm1fKjG_i7M_lvyZcPPSR4RR9r8MGzFZdbexTS8IMBgxr6TZgsjyma-sy8Y/exec';
     
-    fetch(url, {
-        method: 'POST',
-        body: JSON.stringify(adData),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
+fetch(url, {
+    method: 'POST',
+    mode: 'cors', // 🔥 CORS engedélyezése
+    body: JSON.stringify(adData),
+    headers: {
+        'Content-Type': 'application/json'
+    }
+})
+
     .then(response => response.json())
     .then(data => {
         console.log('Success:', data);
@@ -43,13 +45,17 @@ function submitAdToGoogleSheets(adData) {
 
 // Google Sheetsből hirdetések lekérése
 function fetchAdsFromGoogleSheets() {
-    const url = 'https://script.google.com/macros/s/AKfycbzrDfJhTAzGoUSwtkrOXTWbfZp8uCcHOpRdwvIjI29TGl0l6NpooaQV0XB6TDC18LrX/exec?action=getAds';
+    const url = 'https://script.google.com/macros/s/AKfycbySqB_kDbm1fKjG_i7M_lvyZcPPSR4RR9r8MGzFZdbexTS8IMBgxr6TZgsjyma-sy8Y/exec?action=getAds';
 
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            displayAds(data);
-        })
+fetch(url, {
+    method: 'POST',
+    mode: 'cors', // 🔥 CORS engedélyezése
+    body: JSON.stringify(adData),
+    headers: {
+        'Content-Type': 'application/json'
+    }
+})
+
         .catch(error => console.error('Hiba történt a hirdetések lekérésekor:', error));
 }
 
