@@ -3,42 +3,185 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A4 Stílusú Weboldal</title>
+    <title>Hirdetések</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap" rel="stylesheet">
+    <style>
+        .form-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .form-container input[type="text"],
+        .form-container input[type="email"],
+        .form-container input[type="tel"],
+        .form-container input[type="date"],
+        .form-container input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-container input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-container input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
 </head>
 <body>
     <header>
-<header>
-    <div class="header-content">
-        <div class="header-large">MAG-TÁRHELY</div>
-        <div class="header-small">
-            <div>MEZŐGAZDASÁGI</div>
-            <div>VÁLLALKOZÁS</div>
+        <div class="header-content">
+            <div class="header-large">MAG-TÁRHELY</div>
+            <div class="header-small">
+                <div>MEZŐGAZDASÁGI</div>
+                <div>VÁLLALKOZÁS</div>
+            </div>
         </div>
-    </div>
-    <nav>
-        <ul>
+        <nav>
+            <ul>
                 <li><a href="index.html">Kezdőlap</a></li>
                 <li><a href="rolunk.html">Rólunk</a></li>
                 <li><a href="szolgaltatasok.html">Szolgáltatások</a></li>
                 <li><a href="urlap.html">Űrlap</a></li>
                 <li><a href="kispiac.html">Kispiac</a></li>
                 <li><a href="kapcsolat.html">Kapcsolat</a></li>
-        </ul>
-    </nav>
-</header>
+            </ul>
+        </nav>
     </header>
 
     <main>
         <section id="home">
             <h2>Űrlap</h2>
-            <p>Hirdetések feltöltéséhez szükséges ürlap</p>
+            <div class="form-container">
+                <h2>Hirdetés feladása</h2>
+                <form id="adForm">
+                    <label for="adContent">Hirdetés tartalma:</label>
+                    <input type="text" id="adContent" name="adContent" required>
+
+                    <label for="advertiserEmail">Email cím:</label>
+                    <input type="email" id="advertiserEmail" name="advertiserEmail">
+
+                    <label for="advertiserPhone">Telefonszám:</label>
+                    <input type="tel" id="advertiserPhone" name="advertiserPhone" required>
+
+                    <label for="adDate">Dátum:</label>
+                    <input type="date" id="adDate" name="adDate" required>
+
+                    <label for="adPrice">Ár (Ft):</label>
+                    <input type="number" id="adPrice" name="adPrice" required>
+
+                    <input type="submit" value="Hirdetés beküldése">
+                </form>
+            </div>
+
+            <h2>Hirdetések</h2>
+            <table id="adsTable">
+                <thead>
+                    <tr>
+                        <th>Dátum</th>
+                        <th>Hirdetés tartalma</th>
+                        <th>Email cím</th>
+                        <th>Telefonszám</th>
+                        <th>Ár (Ft)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Ide kerülnek a hirdetések -->
+                </tbody>
+            </table>
         </section>
     </main>
 
     <footer>
         <p>&Frissítve:</p>
     </footer>
+
+    <script>
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzrDfJhTAzGoUSwtkrOXTWbfZp8uCcHOpRdwvIjI29TGl0l6NpooaQV0XB6TDC18LrX/exec';
+
+        // Űrlap elküldése
+        document.getElementById('adForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const adContent = document.getElementById('adContent').value;
+            const advertiserEmail = document.getElementById('advertiserEmail').value;
+            const advertiserPhone = document.getElementById('advertiserPhone').value;
+            const adDate = document.getElementById('adDate').value;
+            const adPrice = document.getElementById('adPrice').value;
+
+            const response = await fetch(WEB_APP_URL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    date: adDate,
+                    content: adContent,
+                    email: advertiserEmail,
+                    phone: advertiserPhone,
+                    price: adPrice
+                })
+            });
+
+            if (response.ok) {
+                alert('Hirdetés sikeresen beküldve!');
+                document.getElementById('adForm').reset();
+                updateTable(); // Frissíti a táblázatot
+            } else {
+                alert('Hiba történt a hirdetés beküldése során.');
+            }
+        });
+
+        // Hirdetések lekérése és megjelenítése
+        async function updateTable() {
+            const response = await fetch(WEB_APP_URL);
+            const data = await response.json();
+            const tbody = document.querySelector('#adsTable tbody');
+            tbody.innerHTML = ''; // Táblázat ürítése
+
+            // Hirdetések dátum szerinti rendezése (legújabb elöl)
+            data.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            // Hirdetések hozzáadása a táblázathoz
+            data.forEach(ad => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${ad.date}</td>
+                    <td>${ad.content}</td>
+                    <td>${ad.email}</td>
+                    <td>${ad.phone}</td>
+                    <td>${ad.price} Ft</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Oldal betöltésekor frissítjük a táblázatot
+        updateTable();
+    </script>
 </body>
 </html>
