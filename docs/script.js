@@ -21,7 +21,7 @@ document.getElementById('adForm').addEventListener('submit', function(event) {
 
 // Hirdetés adatainak beküldése a Google Sheets-be
 function submitAdToGoogleSheets(adData) {
-    const url = 'https://script.google.com/macros/s/AKfycbySqB_kDbm1fKjG_i7M_lvyZcPPSR4RR9r8MGzFZdbexTS8IMBgxr6TZgsjyma-sy8Y/exec';
+    const url = 'https://script.google.com/macros/s/AKfycbws8c3jm6d23ur8A3lk5oNaXrUDf_1orWhUunphwZ4JiWYxqjl1oafiESbY-dnU3cBf/exec';
     
 fetch(url, {
     method: 'POST',
@@ -45,7 +45,7 @@ fetch(url, {
 
 // Google Sheetsből hirdetések lekérése
 function fetchAdsFromGoogleSheets() {
-    const url = 'https://script.google.com/macros/s/AKfycbySqB_kDbm1fKjG_i7M_lvyZcPPSR4RR9r8MGzFZdbexTS8IMBgxr6TZgsjyma-sy8Y/exec?action=getAds';
+    const url = 'https://script.google.com/macros/s/AKfycbws8c3jm6d23ur8A3lk5oNaXrUDf_1orWhUunphwZ4JiWYxqjl1oafiESbY-dnU3cBf/exec';
 
 fetch(url, {
     method: 'POST',
