@@ -1,73 +1,77 @@
-<!DOCTYPE html>
-<html lang="hu">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hirdetés feladása</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&display=swap" rel="stylesheet">
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-</head>
-<body>
-    <header>
-        <div class="header-content">
-            <div class="header-large">MAG-TÁRHELY</div>
-            <div class="header-small">
-                <div>MEZŐGAZDASÁGI</div>
-                <div>VÁLLALKOZÁS</div>
-            </div>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="index.html">Kezdőlap</a></li>
-                <li><a href="rolunk.html">Rólunk</a></li>
-                <li><a href="szolgaltatasok.html">Szolgáltatások</a></li>
-                <li><a href="urlap.html">Űrlap</a></li>
-                <li><a href="kispiac.html">Kispiac</a></li>
-                <li><a href="kapcsolat.html">Kapcsolat</a></li>
-            </ul>
-        </nav>
-    </header>
+document.getElementById('adForm').addEventListener('submit', function(event) {
+    event.preventDefault();
 
-    <main>
-        <section id="home">
-            <h2>Hirdetés feladása</h2>
-            <p>Hirdetések feltöltéséhez szükséges űrlap</p>
+    const adContent = document.getElementById('adContent').value;
+    const advertiserEmail = document.getElementById('advertiserEmail').value;
+    const advertiserPhone = document.getElementById('advertiserPhone').value;
+    const adDate = document.getElementById('adDate').value;
+    const adPrice = document.getElementById('adPrice').value;
 
-            <div class="form-container">
-                <form id="adForm">
-                    <label for="adContent">Hirdetés tartalma:</label>
-                    <input type="text" id="adContent" name="adContent" required>
+    const adData = {
+        'date': adDate,
+        'adContent': adContent,
+        'email': advertiserEmail,
+        'phone': advertiserPhone,
+        'price': adPrice
+    };
 
-                    <label for="advertiserEmail">Email cím:</label>
-                    <input type="email" id="advertiserEmail" name="advertiserEmail" required>
+    submitAdToGoogleSheets(adData);
+});
 
-                    <label for="advertiserPhone">Telefonszám:</label>
-                    <input type="tel" id="advertiserPhone" name="advertiserPhone" required>
+function submitAdToGoogleSheets(adData) {
+    const url = 'https://script.google.com/macros/s/AKfycbySqB_kDbm1fKjG_i7M_lvyZcPPSR4RR9r8MGzFZdbexTS8IMBgxr6TZgsjyma-sy8Y/exec';
+    
+fetch(url, {
+    method: 'POST',
+    mode: 'cors', // 🔥 CORS engedélyezése
+    body: JSON.stringify(adData),
+    headers: {
+        'Content-Type': 'application/json'
+    }
+})
 
-                    <label for="adDate">Dátum:</label>
-                    <input type="date" id="adDate" name="adDate" required>
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        alert('Hirdetés sikeresen feltöltve!');
+        fetchAdsFromGoogleSheets();
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
 
-                    <label for="adPrice">Ár (Ft):</label>
-                    <input type="number" id="adPrice" name="adPrice" required>
+function fetchAdsFromGoogleSheets() {
+    const url = 'https://script.google.com/macros/s/AKfycbySqB_kDbm1fKjG_i7M_lvyZcPPSR4RR9r8MGzFZdbexTS8IMBgxr6TZgsjyma-sy8Y/exec?action=getAds';
 
-                    <input type="submit" value="Hirdetés beküldése">
-                </form>
-            </div>
+fetch(url, {
+    method: 'POST',
+    mode: 'cors', // 🔥 CORS engedélyezése
+    body: JSON.stringify(adData),
+    headers: {
+        'Content-Type': 'application/json'
+    }
+})
 
-            <div id="adsContainer" class="ads-container">
-                <h3>Aktuális hirdetések:</h3>
-                <div id="adsList"></div>
-            </div>
-        </section>
-    </main>
+        .catch(error => console.error('Hiba történt a hirdetések lekérésekor:', error));
+}
 
-    <footer>
-        <p>&copy; Frissítve: 2025</p>
-    </footer>
+function displayAds(ads) {
+    const adsList = document.getElementById('adsList');
+    adsList.innerHTML = '';
 
-    <script src="script.js"></script>
-</body>
-</html>
+    ads.forEach(ad => {
+        const adItem = document.createElement('div');
+        adItem.className = 'ad-item';
+
+        adItem.innerHTML = `
+            <pre>Dátum: ${ad.date}</pre>
+            <pre>Hirdetés: ${ad.adContent}</pre>
+            <pre>Email: ${ad.email}</pre>
+            <pre>Telefonszám: ${ad.phone}</pre>
+            <pre>Ár: ${ad.price} Ft</pre>
+        `;
+        adsList.appendChild(adItem);
+    });
+}
 

@@ -31,7 +31,8 @@
     <main>
         <section id="home">
             <h2>Kispiac</h2>
-            <p>Hamarosan kezdünk.</p>
+            <p>Hirdetések listája:</p>
+            <div id="adsList"></div>
         </section>
     </main>
 
@@ -40,6 +41,9 @@
     </footer>
 
     <script src="script.js"></script>
+    <script>
+        fetchAdsFromGoogleSheets(); // Betölti a hirdetéseket az oldal megnyitásakor
+    </script>
 </body>
 </html>
 
