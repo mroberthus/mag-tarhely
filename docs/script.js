@@ -60,7 +60,7 @@ function fetchAdsFromGoogleSheets() {
 
 // Hirdetések megjelenítése
 function displayAds(ads) {
-    const adsList = document.getElementById('adsList');
+   const adsList = document.getElementById('adsList');
     adsList.innerHTML = ''; // Törli az előző hirdetéseket
 
     ads.forEach(ad => {
@@ -68,11 +68,11 @@ function displayAds(ads) {
         adItem.className = 'ad-item';
 
         adItem.innerHTML = `
-            <pre>Dátum: ${ad.date}</pre>
-            <pre>Hirdetés: ${ad.adContent}</pre>
-            <pre>Email: ${ad.email}</pre>
-            <pre>Telefonszám: ${ad.phone}</pre>
-            <pre>Ár: ${ad.price} Ft</pre>
+            <pre>Dátum: ${ad["Dátum"]}</pre>
+            <pre>Hirdetés: ${ad["Hirdetés tartalma"]}</pre>
+            <pre>Email: ${ad["Email cím"]}</pre>
+            <pre>Telefonszám: ${ad["Telefonszám"]}</pre>
+            <pre>Ár: ${ad["Ár (Ft)"]} Ft</pre>
         `;
         adsList.appendChild(adItem);
     });
