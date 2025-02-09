@@ -23,15 +23,14 @@ document.getElementById('adForm').addEventListener('submit', function(event) {
 function submitAdToGoogleSheets(adData) {
     const url = 'https://script.google.com/macros/s/AKfycbws8c3jm6d23ur8A3lk5oNaXrUDf_1orWhUunphwZ4JiWYxqjl1oafiESbY-dnU3cBf/exec';
     
-fetch(url, {
-    method: 'POST',
-    mode: 'cors', // 🔥 CORS engedélyezése
-    body: JSON.stringify(adData),
-    headers: {
-        'Content-Type': 'application/json'
-    }
-})
-
+    fetch(url, {
+        method: 'POST',
+        mode: 'cors', // 🔥 CORS engedélyezése
+        body: JSON.stringify(adData),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
     .then(response => response.json())
     .then(data => {
         console.log('Success:', data);
@@ -47,16 +46,16 @@ fetch(url, {
 function fetchAdsFromGoogleSheets() {
     const url = 'https://script.google.com/macros/s/AKfycbws8c3jm6d23ur8A3lk5oNaXrUDf_1orWhUunphwZ4JiWYxqjl1oafiESbY-dnU3cBf/exec';
 
-fetch(url, {
-    method: 'POST',
-    mode: 'cors', // 🔥 CORS engedélyezése
-    body: JSON.stringify(adData),
-    headers: {
-        'Content-Type': 'application/json'
-    }
-})
-
-        .catch(error => console.error('Hiba történt a hirdetések lekérésekor:', error));
+    fetch(url, {
+        method: 'GET', // 🔥 GET kérés, mert csak lekérjük az adatokat
+        mode: 'cors' // 🔥 CORS engedélyezése
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Hirdetések:', data);
+        displayAds(data); // Hirdetések megjelenítése
+    })
+    .catch(error => console.error('Hiba történt a hirdetések lekérésekor:', error));
 }
 
 // Hirdetések megjelenítése
