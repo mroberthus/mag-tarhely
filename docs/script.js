@@ -20,15 +20,18 @@ document.getElementById('adForm').addEventListener('submit', function(event) {
 });
 
 // Hirdetés adatainak beküldése a Google Sheets-be
+// Hirdetés adatainak beküldése a Google Sheets-be
 function submitAdToGoogleSheets(adData) {
-    const url = 'https://script.google.com/macros/s/1L-XFPxsxKubVyscQc_HlU8cPbH0OeMvk9WSaFD2M2oth-EWxFwqE6zpr/exec';
+    const url = 'https://script.google.com/macros/s/AKfycbzvIARl2TpwJgI23IjqXjBazAPNnFpzKirvyRDnjVlAJceBKk-n76yFRzsfv62VpJba/exec';
     
     fetch(url, {
         method: 'POST',
         body: JSON.stringify(adData),
         headers: {
-            'Content-Type': 'application/json'
-        }
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*', // CORS engedélyezése
+        },
+        mode: 'cors',  // CORS engedélyezés a frontendben
     })
     .then(response => response.json())
     .then(data => {
@@ -41,9 +44,10 @@ function submitAdToGoogleSheets(adData) {
     });
 }
 
+
 // Google Sheetsből hirdetések lekérése
 function fetchAdsFromGoogleSheets() {
-    const url = 'https://script.google.com/macros/s/1L-XFPxsxKubVyscQc_HlU8cPbH0OeMvk9WSaFD2M2oth-EWxFwqE6zpr/exec';
+    const url = 'https://script.google.com/macros/s/AKfycbzvIARl2TpwJgI23IjqXjBazAPNnFpzKirvyRDnjVlAJceBKk-n76yFRzsfv62VpJba/exec';
 
     fetch(url)
         .then(response => response.json())
@@ -74,3 +78,4 @@ function displayAds(ads) {
 }
 
 // Hirdetések lekérése a kezdeti bet
+
