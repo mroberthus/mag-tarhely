@@ -25,7 +25,6 @@ function submitAdToGoogleSheets(adData) {
     
     fetch(url, {
         method: 'POST',
-        mode: 'cors', // 🔥 CORS engedélyezése
         body: JSON.stringify(adData),
         headers: {
             'Content-Type': 'application/json'
@@ -46,21 +45,17 @@ function submitAdToGoogleSheets(adData) {
 function fetchAdsFromGoogleSheets() {
     const url = 'https://script.google.com/macros/s/AKfycbws8c3jm6d23ur8A3lk5oNaXrUDf_1orWhUunphwZ4JiWYxqjl1oafiESbY-dnU3cBf/exec';
 
-    fetch(url, {
-        method: 'GET', // 🔥 GET kérés, mert csak lekérjük az adatokat
-        mode: 'cors' // 🔥 CORS engedélyezése
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Hirdetések:', data);
-        displayAds(data); // Hirdetések megjelenítése
-    })
-    .catch(error => console.error('Hiba történt a hirdetések lekérésekor:', error));
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            displayAds(data);
+        })
+        .catch(error => console.error('Hiba történt a hirdetések lekérésekor:', error));
 }
 
 // Hirdetések megjelenítése
 function displayAds(ads) {
-   const adsList = document.getElementById('adsList');
+    const adsList = document.getElementById('adsList');
     adsList.innerHTML = ''; // Törli az előző hirdetéseket
 
     ads.forEach(ad => {
@@ -68,15 +63,14 @@ function displayAds(ads) {
         adItem.className = 'ad-item';
 
         adItem.innerHTML = `
-            <pre>Dátum: ${ad["Dátum"]}</pre>
-            <pre>Hirdetés: ${ad["Hirdetés tartalma"]}</pre>
-            <pre>Email: ${ad["Email cím"]}</pre>
-            <pre>Telefonszám: ${ad["Telefonszám"]}</pre>
-            <pre>Ár: ${ad["Ár (Ft)"]} Ft</pre>
+            <pre>Dátum: ${ad.date}</pre>
+            <pre>Hirdetés: ${ad.adContent}</pre>
+            <pre>Email: ${ad.email}</pre>
+            <pre>Telefonszám: ${ad.phone}</pre>
+            <pre>Ár: ${ad.price} Ft</pre>
         `;
         adsList.appendChild(adItem);
     });
 }
 
-// Az oldal betöltésekor lekéri a hirdetéseket
-fetchAdsFromGoogleSheets();
+// Hirdetések lekérése a kezdeti bet
