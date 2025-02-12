@@ -22,7 +22,7 @@ document.getElementById('adForm').addEventListener('submit', function(event) {
 // Hirdetés adatainak beküldése a Google Sheets-be
 // Hirdetés adatainak beküldése a Google Sheets-be
 function submitAdToGoogleSheets(adData) {
-    const url = 'https://script.google.com/macros/s/AKfycbzvIARl2TpwJgI23IjqXjBazAPNnFpzKirvyRDnjVlAJceBKk-n76yFRzsfv62VpJba/exec';
+    const url = 'https://script.google.com/macros/s/AKfycbycN2R1gda4HbFJouObLy3qTDg6ks0W3paKXhDoPspeOPtaQRDEgB79LxSM2c0aPeBD/exec';
     
     fetch(url, {
         method: 'POST',
@@ -47,25 +47,21 @@ function submitAdToGoogleSheets(adData) {
 
 // Google Sheetsből hirdetések lekérése
 function fetchAdsFromGoogleSheets() {
-    const url = 'https://script.google.com/macros/s/AKfycbzvIARl2TpwJgI23IjqXjBazAPNnFpzKirvyRDnjVlAJceBKk-n76yFRzsfv62VpJba/exec';
+    const url = 'https://script.google.com/macros/s/AKfycbycN2R1gda4HbFJouObLy3qTDg6ks0W3paKXhDoPspeOPtaQRDEgB79LxSM2c0aPeBD/exec';
 
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            displayAds(data);
-        })
-        .catch(error => console.error('Hiba történt a hirdetések lekérésekor:', error));
+    const script = document.createElement('script');
+    script.src = url;
+    document.body.appendChild(script);
 }
 
-// Hirdetések megjelenítése
+// Hirdetések megjelenítése JSONP hívásból
 function displayAds(ads) {
     const adsList = document.getElementById('adsList');
-    adsList.innerHTML = ''; // Törli az előző hirdetéseket
+    adsList.innerHTML = ''; // Előző hirdetések törlése
 
     ads.forEach(ad => {
         const adItem = document.createElement('div');
         adItem.className = 'ad-item';
-
         adItem.innerHTML = `
             <pre>Dátum: ${ad.date}</pre>
             <pre>Hirdetés: ${ad.adContent}</pre>

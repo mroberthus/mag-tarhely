@@ -1,0 +1,66 @@
+A google app script módosítása:
+
+function doPost(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Munkalap");
+  var data = JSON.parse(e.postData.contents);
+  
+  sheet.appendRow([
+    data.date, 
+    data.adContent, 
+    data.email || "",  // Ha nincs email, üres cellát hagyunk
+    data.phone, 
+    data.price
+  ]);
+
+  return ContentService.createTextOutput(JSON.stringify({status: "success"}))
+      .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doGet(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Munkalap");
+  var data = sheet.getDataRange().getValues();
+  
+  var ads = [];
+  
+  for (var i = 1; i < data.length; i++) {  // Az első sor a fejléc
+    ads.push({
+      date: data[i][0],
+      adContent: data[i][1],
+      email: data[i][2],
+      phone: data[i][3],
+      price: data[i][4]
+    });
+  }
+  
+  return ContentService.createTextOutput(JSON.stringify(ads))
+      .setMimeType(ContentService.MimeType.JSON);
+}
+
+
+A script.js módosítása:
+
+// Hirdetés adatainak beküldése a Google Sheets-be
+function submitAdToGoogleSheets(adData) {
+    const url = 'https://script.google.com/macros/s/AKfycbxwo3SL4-IM29JlAae0PH5onqrOxhii1mB27TnuAF-ehcNG1MQXoOLAZxTuDe707sxM/exec';
+    
+    fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(adData),
+        headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*', // CORS engedélyezése
+        },
+        mode: 'cors',  // CORS engedélyezés a frontendben
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        alert('Hirdetés sikeresen feltöltve!');
+        fetchAdsFromGoogleSheets(); // Hirdetések frissítése
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+
+A linket javítani kell
